@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório Financeiro Semanal</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .week-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .week-selector button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .week-selector button:hover {
+            background-color: #2980b9;
+        }
+        
+        .week-display {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: bold;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .summary {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .total {
+            font-weight: bold;
+            font-size: 1.3rem;
+            border-top: 2px solid var(--dark);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        .positive {
+            color: var(--success);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            background-color: var(--success);
+            box-shadow: var(--shadow);
+            transform: translateX(100vw);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Relatório Financeiro Semanal</h1>
+            <div class="week-selector">
+                <button id="prev-week">&lt; Semana Anterior</button>
+                <span class="week-display" id="week-display">Semana 01/01/2023</span>
+                <button id="next-week">Próxima Semana &gt;</button>
+            </div>
+        </header>
+        
+        <div class="grid-container">
+            <div class="card">
+                <h2>Faturamento</h2>
+                <table id="revenue-table">
+                    <thead>
+                        <tr>
+                            <th>Dia</th>
+                            <th>Valor (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Segunda-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="revenue-input" data-day="monday"></td>
+                        </tr>
+                        <tr>
+                            <td>Terça-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="revenue-input" data-day="tuesday"></td>
+                        </tr>
+                        <tr>
+                            <td>Quarta-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="revenue-input" data-day="wednesday"></td>
+                        </tr>
+                        <tr>
+                            <td>Quinta-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="revenue-input" data-day="thursday"></td>
+                        </tr>
+                        <tr>
+                            <td>Sexta-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="revenue-input" data-day="friday"></td>
+                        </tr>
+                        <tr>
+                            <td>Sábado</td>
+                            <td><input type="number" min="0" step="0.01" class="revenue-input" data-day="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td>Domingo</td>
+                            <td><input type="number" min="0" step="0.01" class="revenue-input" data-day="sunday"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="summary">
+                    <div class="summary-item">
+                        <span>Total de Faturamento:</span>
+                        <span id="total-revenue">R$ 0,00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Meta Semanal (R$ 400,00):</span>
+                        <span id="revenue-goal">0%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Despesas</h2>
+                <table id="expenses-table">
+                    <thead>
+                        <tr>
+                            <th>Dia</th>
+                            <th>Valor (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Segunda-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="expense-input" data-day="monday"></td>
+                        </tr>
+                        <tr>
+                            <td>Terça-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="expense-input" data-day="tuesday"></td>
+                        </tr>
+                        <tr>
+                            <td>Quarta-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="expense-input" data-day="wednesday"></td>
+                        </tr>
+                        <tr>
+                            <td>Quinta-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="expense-input" data-day="thursday"></td>
+                        </tr>
+                        <tr>
+                            <td>Sexta-feira</td>
+                            <td><input type="number" min="0" step="0.01" class="expense-input" data-day="friday"></td>
+                        </tr>
+                        <tr>
+                            <td>Sábado</td>
+                            <td><input type="number" min="0" step="0.01" class="expense-input" data-day="saturday"></td>
+                        </tr>
+                        <tr>
+                            <td>Domingo</td>
+                            <td><input type="number" min="0" step="0.01" class="expense-input" data-day="sunday"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="summary">
+                    <div class="summary-item">
+                        <span>Total de Despesas:</span>
+                        <span id="total-expenses">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Resumo Financeiro</h2>
+            <div class="summary">
+                <div class="summary-item">
+                    <span>Faturamento Total:</span>
+                    <span id="summary-revenue">R$ 0,00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Despesas Totais:</span>
+                    <span id="summary-expenses">R$ 0,00</span>
+                </div>
+                <div class="summary-item total">
+                    <span>Lucro Líquido:</span>
+                    <span id="net-profit">R$ 0,00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button class="btn btn-primary" id="save-btn">Salvar Dados</button>
+            <button class="btn btn-success" id="calculate-btn">Calcular Totais</button>
+            <button class="btn btn-danger" id="clear-btn">Limpar Tudo</button>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">Dados salvos com sucesso!</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos da DOM
+            const weekDisplay = document.getElementById('week-display');
+            const prevWeekBtn = document.getElementById('prev-week');
+            const nextWeekBtn = document.getElementById('next-week');
+            const revenueInputs = document.querySelectorAll('.revenue-input');
+            const expenseInputs = document.querySelectorAll('.expense-input');
+            const totalRevenueEl = document.getElementById('total-revenue');
+            const totalExpensesEl = document.getElementById('total-expenses');
+            const revenueGoalEl = document.getElementById('revenue-goal');
+            const summaryRevenueEl = document.getElementById('summary-revenue');
+            const summaryExpensesEl = document.getElementById('summary-expenses');
+            const netProfitEl = document.getElementById('net-profit');
+            const saveBtn = document.getElementById('save-btn');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const notification = document.getElementById('notification');
+            
+            // Data atual
+            let currentDate = new Date();
+            updateWeekDisplay();
+            
+            // Carregar dados da semana atual
+            loadWeekData();
+            
+            // Event Listeners
+            prevWeekBtn.addEventListener('click', () => {
+                changeWeek(-1);
+            });
+            
+            nextWeekBtn.addEventListener('click', () => {
+                changeWeek(1);
+            });
+            
+            revenueInputs.forEach(input => {
+                input.addEventListener('input', calculateTotals);
+            });
+            
+            expenseInputs.forEach(input => {
+                input.addEventListener('input', calculateTotals);
+            });
+            
+            saveBtn.addEventListener('click', saveData);
+            calculateBtn.addEventListener('click', calculateTotals);
+            clearBtn.addEventListener('click', clearData);
+            
+            // Funções
+            function updateWeekDisplay() {
+                const weekStart = getWeekStartDate(currentDate);
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+                
+                const formatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+                weekDisplay.textContent = `Semana ${weekStart.toLocaleDateString('pt-BR', formatOptions)} a ${weekEnd.toLocaleDateString('pt-BR', formatOptions)}`;
+            }
+            
+            function getWeekStartDate(date) {
+                const dayOfWeek = date.getDay();
+                const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+                return new Date(date.setDate(diff));
+            }
+            
+            function changeWeek(weeks) {
+                currentDate.setDate(currentDate.getDate() + weeks * 7);
+                updateWeekDisplay();
+                loadWeekData();
+            }
+            
+            function getWeekKey() {
+                const weekStart = getWeekStartDate(new Date(currentDate));
+                return `week_${weekStart.getFullYear()}_${weekStart.getMonth() + 1}_${weekStart.getDate()}`;
+            }
+            
+            function loadWeekData() {
+                const weekKey = getWeekKey();
+                const weekData = JSON.parse(localStorage.getItem(weekKey)) || {};
+                
+                revenueInputs.forEach(input => {
+                    const day = input.getAttribute('data-day');
+                    input.value = weekData[`revenue_${day}`] || '';
+                });
+                
+                expenseInputs.forEach(input => {
+                    const day = input.getAttribute('data-day');
+                    input.value = weekData[`expense_${day}`] || '';
+                });
+                
+                calculateTotals();
+            }
+            
+            function saveData() {
+                const weekKey = getWeekKey();
+                const weekData = {};
+                
+                revenueInputs.forEach(input => {
+                    const day = input.getAttribute('data-day');
+                    weekData[`revenue_${day}`] = input.value ? parseFloat(input.value) : 0;
+                });
+                
+                expenseInputs.forEach(input => {
+                    const day = input.getAttribute('data-day');
+                    weekData[`expense_${day}`] = input.value ? parseFloat(input.value) : 0;
+                });
+                
+                localStorage.setItem(weekKey, JSON.stringify(weekData));
+                
+                showNotification('Dados salvos com sucesso!');
+            }
+            
+            function calculateTotals() {
+                let totalRevenue = 0;
+                let totalExpenses = 0;
+                
+                revenueInputs.forEach(input => {
+                    totalRevenue += input.value ? parseFloat(input.value) : 0;
+                });
+                
+                expenseInputs.forEach(input => {
+                    totalExpenses += input.value ? parseFloat(input.value) : 0;
+                });
+                
+                const netProfit = totalRevenue - totalExpenses;
+                const goalPercentage = Math.round((totalRevenue / 400) * 100);
+                
+                totalRevenueEl.textContent = `R$ ${totalRevenue.toFixed(2)}`;
+                totalExpensesEl.textContent = `R$ ${totalExpenses.toFixed(2)}`;
+                revenueGoalEl.textContent = `${goalPercentage}%`;
+                summaryRevenueEl.textContent = `R$ ${totalRevenue.toFixed(2)}`;
+                summaryExpensesEl.textContent = `R$ ${totalExpenses.toFixed(2)}`;
+                netProfitEl.textContent = `R$ ${netProfit.toFixed(2)}`;
+                
+                netProfitEl.className = 'positive';
+                if (netProfit < 0) {
+                    netProfitEl.className = 'negative';
+                }
+            }
+            
+            function clearData() {
+                if (confirm('Tem certeza que deseja limpar todos os dados desta semana?')) {
+                    revenueInputs.forEach(input => {
+                        input.value = '';
+                    });
+                    
+                    expenseInputs.forEach(input => {
+                        input.value = '';
+                    });
+                    
+                    calculateTotals();
+                }
+            }
+            
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Calcular totais iniciais
+            calculateTotals();
+        });
+    </script>
+</body>
+</html>
