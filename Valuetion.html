@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZappyLog - Valuation e Capital Social</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --accent: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(120deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 25px;
+        }
+        
+        .card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        
+        .highlight {
+            background-color: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--secondary);
+            text-align: center;
+            margin: 25px 0;
+            padding: 15px;
+            background: #f0fdf4;
+            border-radius: 10px;
+            border: 2px dashed var(--secondary);
+        }
+        
+        .signature {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: right;
+        }
+        
+        .footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .step i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .steps {
+                flex-direction: column;
+            }
+            
+            .value {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-bolt"></i> ZappyLog
+            </div>
+            <div class="subtitle">Tecnologia em Logística sob Demanda</div>
+        </header>
+        
+        <div class="content">
+            <h1>Documento de Valuation e Capital Social</h1>
+            
+            <div class="card">
+                <p><strong>Data do Valuation:</strong> 17 de Setembro de 2025</p>
+                <p><strong>Emitente:</strong> Luan Correa - Fundador e Proprietário 100%</p>
+                <p><strong>CNPJ:</strong> A DEFINIR</p>
+            </div>
+            
+            <h2>1. Valor Técnico da Plataforma (Custo de Reconstrução)</h2>
+            <p>Valuation calculado com base no custo hipotético de terceirizar o desenvolvimento integral da plataforma:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Componente</th>
+                        <th>Descrição</th>
+                        <th>Custo de Mercado (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Motor de Matchmaking</strong></td>
+                        <td>Algoritmo de logística em tempo real com geolocalização e roteamento</td>
+                        <td>R$ 750.000</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Aplicativos Móveis e Web</strong></td>
+                        <td>Trio de aplicativos (consumidor, entregador, vendedor) com UI/UX moderna</td>
+                        <td>R$ 450.000</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Backend e Infraestrutura</strong></td>
+                        <td>APIs robustas, banco de dados, servidores, painel de gestão e segurança</td>
+                        <td>R$ 600.000</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Integrações Estratégicas</strong></td>
+                        <td>APIs de mapas (Google Maps), gateways de pagamento e notificação</td>
+                        <td>R$ 100.000</td>
+                    </tr>
+                    <tr style="background-color: #e0f2fe; font-weight: bold;">
+                        <td colspan="2">VALOR TOTAL DO ATIVO TECNOLÓGICO</td>
+                        <td>R$ 1.900.000</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>2. Valor de Mercado (Potencial de Disrupção)</h2>
+            <p>A ZappyLog possui diferenciais únicos no mercado nacional, o que agrega valor beyond do custo de desenvolvimento:</p>
+            
+            <div class="highlight">
+                <ul>
+                    <li>Única plataforma de entrega <strong>multicategoria em até 40min</strong></li>
+                    <li>Sistema de <strong>frete até 50% mais barato</strong> que concorrentes diretos</li>
+                    <li>Tecnologia de <strong>rastreamento em tempo real</strong> com atualização a cada 50m</li>
+                    <li>Arquitetura escalável pronta para expansão nacional</li>
+                </ul>
+            </div>
+            
+            <div class="value">
+                Valuation Total: R$ 2.500.000,00
+            </div>
+            
+            <h2>3. Estrutura Acionária Atual</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Acionista</th>
+                        <th>Participação</th>
+                        <th>Valor da Participação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Luan Correa</strong></td>
+                        <td>100%</td>
+                        <td>R$ 2.500.000,00</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>4. Próximos Passos para Valorização</h2>
+            <div class="steps">
+                <div class="step">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Validação do Mercado</h3>
+                    <p>100 entregas/dia em Limeira</p>
+                </div>
+                <div class="step">
+                    <i class="fas fa-expand"></i>
+                    <h3>Expansão Geográfica</h3>
+                    <p>3 cidades do interior paulista</p>
+                </div>
+                <div class="step">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Captação de Investimento</h3>
+                    <p>R$ 500k por 15-20% da empresa</p>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Observações:</strong></p>
+                <ul>
+                    <li>Valuation calculado com base no método de custo de reconstrução + potencial de mercado</li>
+                    <li>Documento confidencial - sujeito a NDA para discussões</li>
+                    <li>Valor destinado a negociações estratégicas com sócios/investidores</li>
+                </ul>
+            </div>
+            
+            <div class="signature">
+                <p>________________________</p>
+                <p><strong>Luan Correa</strong></p>
+                <p>Fundador e Proprietário - ZappyLog</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>ZappyLog. • Este documento é confidencial e destinado apenas a negociações autorizadas</p>
+            <p><i class="fas fa-bolt"></i> Entregas em até 40min • Mais rápido, mais barato, mais transparente</p>
+        </div>
+    </div>
+
+    <script>
+        // Pequeno efeito de digitação no título
+        document.addEventListener('DOMContentLoaded', function() {
+            const valueElement = document.querySelector('.value');
+            const originalValue = valueElement.textContent;
+            valueElement.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < originalValue.length) {
+                    valueElement.textContent += originalValue.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                }
+            };
+            
+            setTimeout(typeWriter, 1000);
+        });
+    </script>
+</body>
+</html>
