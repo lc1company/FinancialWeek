@@ -823,8 +823,8 @@
                 // Calcular bônus por tempo trabalhado
                 const hoursWorked = sessionDuration / 3600;
                 if (hoursWorked >= 8) {
-                    workData[dateStr].bonus = (workData[dateStr].bonus || 0) + 20;
-                    showNotification('Bônus de +R$ 20,00 por trabalhar 8h ou mais!', 'success');
+                    workData[dateStr].bonus = (workData[dateStr].bonus || 0) + 14;
+                    showNotification('Bônus de +R$ 14,00 por trabalhar 8h ou mais!', 'success');
                 }
                 
                 // Salvar dados
@@ -882,8 +882,8 @@
                     
                     // Bônus por múltiplas entregas
                     if (workData[dateStr].deliveries % 5 === 0) {
-                        workData[dateStr].bonus = (workData[dateStr].bonus || 0) + 1;
-                        showNotification(`Bônus de +R$ 1,00 por completar ${workData[dateStr].deliveries} entregas!`, 'success');
+                        workData[dateStr].bonus = (workData[dateStr].bonus || 0) + 7;
+                        showNotification(`Bônus de +R$ 7,00 por completar ${workData[dateStr].deliveries} entregas!`, 'success');
                     }
                     
                     showNotification('Entrega registrada! +R$ ' + value.toFixed(2), 'success');
