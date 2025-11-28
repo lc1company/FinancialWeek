@@ -882,8 +882,8 @@
                     
                     // Bônus por múltiplas entregas
                     if (workData[dateStr].deliveries % 5 === 0) {
-                        workData[dateStr].bonus = (workData[dateStr].bonus || 0) + 10;
-                        showNotification(`Bônus de +R$ 10,00 por completar ${workData[dateStr].deliveries} entregas!`, 'success');
+                        workData[dateStr].bonus = (workData[dateStr].bonus || 0) + 1;
+                        showNotification(`Bônus de +R$ 1,00 por completar ${workData[dateStr].deliveries} entregas!`, 'success');
                     }
                     
                     showNotification('Entrega registrada! +R$ ' + value.toFixed(2), 'success');
