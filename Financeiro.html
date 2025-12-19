@@ -1,1220 +1,711 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Relatório de Entrega</title>
+    <title>Sistema Financeiro - Entregador</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #2E86AB;
-            --primary-dark: #1B6B93;
-            --secondary: #A23B72;
-            --success: #4CAF50;
-            --warning: #FF9800;
-            --danger: #F44336;
-            --light: #F8F9FA;
-            --dark: #212529;
-            --gray: #6C757D;
-            --border: #DEE2E6;
-        }
-
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
             background-color: #f5f7fa;
-            color: var(--dark);
+            color: #333;
             line-height: 1.6;
-            min-height: 100vh;
-            padding: 15px;
+            padding: 10px;
         }
-
+        
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
             padding: 20px;
-        }
-
-        .header {
             text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
         }
-
-        .header h1 {
+        
+        h1 {
             font-size: 1.8rem;
             margin-bottom: 5px;
-            color: var(--primary);
         }
-
-        .header p {
-            color: var(--gray);
+        
+        .subtitle {
             font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
         }
-
-        .dashboard {
+        
+        .app-content {
+            padding: 20px;
+        }
+        
+        .stats-summary {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             margin-bottom: 25px;
         }
-
-        @media (min-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border);
-        }
-
-        .card h2 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .time-display {
-            font-size: 1.8rem;
-            font-weight: bold;
-            text-align: center;
-            margin: 15px 0;
-            color: var(--dark);
-        }
-
-        .btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .btn-success {
-            background-color: var(--success);
-        }
-
-        .btn-success:hover {
-            background-color: #3d8b40;
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-        }
-
-        .btn-danger:hover {
-            background-color: #d32f2f;
-        }
-
-        .btn-warning {
-            background-color: var(--warning);
-        }
-
-        .btn-warning:hover {
-            background-color: #e68900;
-        }
-
-        .btn-full {
-            width: 100%;
-        }
-
-        .work-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .stat-box {
-            background-color: var(--light);
-            border-radius: 5px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin: 5px 0;
-            color: var(--primary);
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-
-        .delivery-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .shift-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .shift-box {
-            background-color: var(--light);
-            border-radius: 5px;
+        
+        .stat-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
             padding: 15px;
             text-align: center;
+            border-left: 4px solid #2a5298;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
         }
-
-        .shift-box.completed {
-            background-color: rgba(76, 175, 80, 0.1);
-            border: 1px solid var(--success);
-        }
-
-        .shift-box.in-progress {
-            background-color: rgba(255, 152, 0, 0.1);
-            border: 1px solid var(--warning);
-        }
-
-        .shift-title {
-            font-weight: bold;
+        
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #666;
             margin-bottom: 8px;
-            font-size: 0.9rem;
         }
-
-        .shift-count {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 8px 0;
+        
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1e3c72;
         }
-
-        .shift-goal {
-            font-size: 0.8rem;
-            color: var(--gray);
+        
+        .positive {
+            color: #2ecc71;
         }
-
-        .calendar-container {
-            background-color: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-            border: 1px solid var(--border);
+        
+        .negative {
+            color: #e74c3c;
         }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .calendar {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .calendar th {
-            padding: 8px;
-            text-align: center;
-            font-weight: bold;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.8rem;
-        }
-
-        .calendar td {
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-
-        .calendar td:hover {
-            background-color: var(--light);
-        }
-
-        .calendar td.today {
-            background-color: var(--primary);
-            color: white;
-            font-weight: bold;
-        }
-
-        .calendar td.worked {
-            background-color: var(--success);
-            color: white;
-            font-weight: bold;
-        }
-
-        .calendar td.worked::after {
-            content: '✓';
-            position: absolute;
-            top: 2px;
-            right: 5px;
-            font-size: 0.7rem;
-        }
-
-        .day-details {
-            background-color: var(--light);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            display: none;
-        }
-
-        .day-details.active {
-            display: block;
-        }
-
-        .history-section {
-            margin-top: 25px;
-        }
-
-        .history-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-
-        .history-table th {
-            padding: 10px;
-            text-align: left;
-            background-color: var(--light);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .history-table td {
-            padding: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .history-table tr:hover {
-            background-color: var(--light);
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--success);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 5px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            max-width: 300px;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .work-status {
-            margin: 10px 0;
-        }
-
-        .status-box {
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .status-working {
-            background-color: rgba(76, 175, 80, 0.1);
-            color: var(--success);
-            border: 1px solid var(--success);
-        }
-
-        .status-not-working {
-            background-color: rgba(255, 152, 0, 0.1);
-            color: var(--warning);
-            border: 1px solid var(--warning);
-        }
-
-        .input-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1001;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .input-modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background-color: white;
+        
+        .input-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
             padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 25px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
         }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .modal-title {
-            font-size: 1.2rem;
-            color: var(--primary);
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--gray);
-        }
-
+        
         .input-group {
             margin-bottom: 15px;
         }
-
-        .input-group label {
+        
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .input-field {
+            flex: 1;
+        }
+        
+        label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 600;
+            color: #444;
         }
-
-        .input-group input {
+        
+        input, select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 5px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 1rem;
+            transition: border 0.3s;
         }
-
-        @media (max-width: 576px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .card {
-                padding: 15px;
-            }
-            
-            .time-display {
-                font-size: 1.5rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .shift-section {
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #2a5298;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1e3c72;
+        }
+        
+        .btn-secondary {
+            background-color: #ecf0f1;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d5dbdb;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .records-section {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 15px;
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background-color: #2a5298;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th {
+            background-color: #e9ecef;
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #444;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .delete-btn {
+            color: #e74c3c;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+            font-style: italic;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .diaria-info {
+            background-color: #e8f4fd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            border-left: 4px solid #3498db;
+        }
+        
+        @media (max-width: 600px) {
+            .stats-summary {
                 grid-template-columns: 1fr;
             }
             
-            .delivery-controls {
-                grid-template-columns: 1fr;
+            .input-row {
+                flex-direction: column;
             }
             
-            .work-controls {
-                grid-template-columns: 1fr;
-            }
-            
-            .calendar th, .calendar td {
-                padding: 5px;
-                font-size: 0.8rem;
-            }
-            
-            .history-table {
-                font-size: 0.8rem;
-            }
-            
-            .history-table th, .history-table td {
+            th, td {
                 padding: 8px 5px;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-chart-line"></i> Sistema de Relatório de Entrega</h1>
-            <p>Controle suas entregas, horas trabalhadas e ganhos</p>
-        </div>
+        <header>
+            <h1><i class="fas fa-motorcycle"></i> Sistema Financeiro - Entregador</h1>
+            <p class="subtitle">Controle de ganhos, despesas de moto e gasolina</p>
+        </header>
         
-        <div class="dashboard">
-            <div class="card">
-                <h2><i class="fas fa-clock"></i> Controle de Tempo</h2>
-                <div class="time-display" id="current-time">--:--:--</div>
+        <div class="app-content">
+            <div class="stats-summary">
+                <div class="stat-card">
+                    <h3>Saldo Total</h3>
+                    <div class="stat-value" id="total-balance">R$ 0,00</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Ganhos do Mês</h3>
+                    <div class="stat-value positive" id="monthly-earnings">R$ 0,00</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Despesas do Mês</h3>
+                    <div class="stat-value negative" id="monthly-expenses">R$ 0,00</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Dias Trabalhados</h3>
+                    <div class="stat-value" id="days-worked">0</div>
+                </div>
+            </div>
+            
+            <div class="input-section">
+                <h2 class="section-title">Registrar Dia de Trabalho</h2>
                 
-                <div class="work-status">
-                    <div id="work-status" class="status-box status-not-working">
-                        STATUS: NÃO TRABALHANDO
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="date"><i class="far fa-calendar-alt"></i> Data</label>
+                        <input type="date" id="date" value="">
+                    </div>
+                    <div class="input-field">
+                        <label for="earnings"><i class="fas fa-money-bill-wave"></i> Valor das Entregas (R$)</label>
+                        <input type="number" id="earnings" step="0.01" placeholder="Ex: 178.77">
                     </div>
                 </div>
                 
-                <div class="work-controls">
-                    <button class="btn btn-success" id="start-work">
-                        <i class="fas fa-play"></i> Iniciar Trabalho
+                <div class="input-row">
+                    <div class="input-field">
+                        <label for="gasoline"><i class="fas fa-gas-pump"></i> Gasto com Gasolina (R$)</label>
+                        <input type="number" id="gasoline" step="0.01" placeholder="Ex: 30.00" value="30">
+                    </div>
+                    <div class="input-field">
+                        <label for="days"><i class="fas fa-calendar-day"></i> Dias de Uso da Moto</label>
+                        <select id="days">
+                            <option value="1">1 dia (R$ 23,00)</option>
+                            <option value="2" selected>2 dias (R$ 46,00)</option>
+                            <option value="3">3 dias (R$ 69,00)</option>
+                            <option value="4">4 dias (R$ 92,00)</option>
+                            <option value="5">5 dias (R$ 115,00)</option>
+                            <option value="6">6 dias (R$ 138,00)</option>
+                            <option value="7">7 dias (R$ 161,00)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="diaria-info">
+                    <i class="fas fa-info-circle"></i> A diária da moto é fixada em <strong>R$ 23,00 por dia</strong>. O valor será automaticamente calculado conforme os dias selecionados.
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn-primary" id="add-record">
+                        <i class="fas fa-plus-circle"></i> Adicionar Registro
                     </button>
-                    <button class="btn btn-danger" id="end-work" disabled>
-                        <i class="fas fa-stop"></i> Finalizar
+                    <button class="btn-success" id="calculate">
+                        <i class="fas fa-calculator"></i> Calcular Líquido
                     </button>
                 </div>
                 
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-label">DURAÇÃO ATUAL</div>
-                        <div class="stat-value" id="work-duration">00:00:00</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">TOTAL HOJE</div>
-                        <div class="stat-value" id="total-work-today">00:00:00</div>
-                    </div>
+                <div style="margin-top: 20px; padding: 15px; background-color: #e8f6f3; border-radius: 8px; display: none;" id="calculation-result">
+                    <h3 style="color: #27ae60; margin-bottom: 10px;"><i class="fas fa-calculator"></i> Cálculo do Dia</h3>
+                    <div id="calculation-details"></div>
                 </div>
             </div>
             
-            <div class="card">
-                <h2><i class="fas fa-tachometer-alt"></i> Desempenho Hoje</h2>
+            <div class="records-section">
+                <h2 class="section-title">Registros de Trabalho</h2>
                 
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-label">ENTREGAS</div>
-                        <div class="stat-value" id="today-deliveries">0</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">GANHOS</div>
-                        <div class="stat-value" id="today-earnings">R$ 0,00</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">BÔNUS</div>
-                        <div class="stat-value" id="today-bonus">R$ 0,00</div>
-                    </div>
+                <div class="filter-options">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="today">Hoje</button>
+                    <button class="filter-btn" data-filter="week">Esta Semana</button>
+                    <button class="filter-btn" data-filter="month">Este Mês</button>
+                    <button class="filter-btn" data-filter="year">Este Ano</button>
                 </div>
                 
-                <div class="shift-section">
-                    <div class="shift-box" id="morning-shift">
-                        <div class="shift-title">TURNO DA MANHÃ</div>
-                        <div class="shift-count">0/5</div>
-                        <div class="shift-goal">Meta: 5 entregas</div>
-                    </div>
-                    <div class="shift-box" id="evening-shift">
-                        <div class="shift-title">TURNO DA NOITE</div>
-                        <div class="shift-count">0/4</div>
-                        <div class="shift-goal">Meta: 4 entregas</div>
-                    </div>
+                <div style="overflow-x: auto;">
+                    <table id="records-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Entregas</th>
+                                <th>Gasolina</th>
+                                <th>Diária Moto</th>
+                                <th>Líquido</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-body">
+                            <!-- Registros serão inseridos aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="empty-message" id="empty-message">
+                    <i class="far fa-folder-open" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                    <p>Nenhum registro encontrado. Adicione seu primeiro registro acima.</p>
                 </div>
             </div>
         </div>
         
-        <div class="card">
-            <h2><i class="fas fa-bolt"></i> Ações Rápidas</h2>
-            
-            <div class="delivery-controls">
-                <button class="btn btn-success" id="add-delivery">
-                    <i class="fas fa-shipping-fast"></i> Entrega (R$ 7,00)
-                </button>
-                <button class="btn btn-warning" id="add-waiting-fee">
-                    <i class="fas fa-clock"></i> Taxa de Espera
-                </button>
-                <button class="btn btn-warning" id="add-tip">
-                    <i class="fas fa-hand-holding-usd"></i> Gorjeta
-                </button>
-                <button class="btn btn-warning" id="add-freelance">
-                    <i class="fas fa-file-invoice-dollar"></i> Renda Extra
-                </button>
-            </div>
-        </div>
-        
-        <div class="calendar-container">
-            <h2><i class="fas fa-calendar-alt"></i> Calendário de Produtividade</h2>
-            
-            <div class="calendar-header">
-                <button class="btn" id="prev-month"><i class="fas fa-chevron-left"></i></button>
-                <h3 id="current-month">Carregando...</h3>
-                <button class="btn" id="next-month"><i class="fas fa-chevron-right"></i></button>
-            </div>
-            
-            <div id="calendar"></div>
-            
-            <div class="day-details" id="day-details">
-                <h3>Detalhes do Dia <span id="detail-date"></span></h3>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-label">ENTREGAS</div>
-                        <div class="stat-value" id="detail-deliveries">0</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">GANHOS</div>
-                        <div class="stat-value" id="detail-earnings">R$ 0,00</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">HORAS TRABALHADAS</div>
-                        <div class="stat-value" id="detail-hours">00:00:00</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">POUPANÇA</div>
-                        <div class="stat-value" id="detail-bonus">R$ 0,00</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="history-section">
-            <h2><i class="fas fa-history"></i> Histórico</h2>
-            <table class="history-table">
-                <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Entregas</th>
-                        <th>Ganhos</th>
-                        <th>Horas</th>
-                        <th>Bônus</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="history-body">
-                    <!-- Histórico será preenchido via JavaScript -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i>
-        <div id="notification-text">Notificação</div>
-    </div>
-
-    <div class="input-modal" id="input-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modal-title">Inserir Valor</h3>
-                <button class="close-modal" id="close-modal">&times;</button>
-            </div>
-            <div class="input-group">
-                <label id="modal-label">Valor:</label>
-                <input type="number" id="modal-input" min="0" step="0.01" placeholder="0,00">
-            </div>
-            <button class="btn btn-success btn-full" id="modal-confirm">Confirmar</button>
-        </div>
+        <footer>
+            <p>Sistema Financeiro para Entregadores &copy; 2023 | Diária da Moto: R$ 23,00/dia</p>
+        </footer>
     </div>
 
     <script>
-        // Inicialização do sistema
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elementos DOM
-            const currentTimeEl = document.getElementById('current-time');
-            const startWorkBtn = document.getElementById('start-work');
-            const endWorkBtn = document.getElementById('end-work');
-            const workDurationEl = document.getElementById('work-duration');
-            const totalWorkTodayEl = document.getElementById('total-work-today');
-            const workStatusEl = document.getElementById('work-status');
-            const addDeliveryBtn = document.getElementById('add-delivery');
-            const addWaitingFeeBtn = document.getElementById('add-waiting-fee');
-            const addTipBtn = document.getElementById('add-tip');
-            const addFreelanceBtn = document.getElementById('add-freelance');
-            const todayDeliveriesEl = document.getElementById('today-deliveries');
-            const todayEarningsEl = document.getElementById('today-earnings');
-            const todayBonusEl = document.getElementById('today-bonus');
-            const morningShiftEl = document.getElementById('morning-shift');
-            const eveningShiftEl = document.getElementById('evening-shift');
-            const historyBodyEl = document.getElementById('history-body');
-            const calendarEl = document.getElementById('calendar');
-            const currentMonthEl = document.getElementById('current-month');
-            const dayDetailsEl = document.getElementById('day-details');
-            const detailDateEl = document.getElementById('detail-date');
-            const detailDeliveriesEl = document.getElementById('detail-deliveries');
-            const detailEarningsEl = document.getElementById('detail-earnings');
-            const detailHoursEl = document.getElementById('detail-hours');
-            const detailBonusEl = document.getElementById('detail-bonus');
-            const notificationEl = document.getElementById('notification');
-            const notificationTextEl = document.getElementById('notification-text');
-            const prevMonthBtn = document.getElementById('prev-month');
-            const nextMonthBtn = document.getElementById('next-month');
-            const inputModalEl = document.getElementById('input-modal');
-            const modalTitleEl = document.getElementById('modal-title');
-            const modalLabelEl = document.getElementById('modal-label');
-            const modalInputEl = document.getElementById('modal-input');
-            const modalConfirmBtn = document.getElementById('modal-confirm');
-            const closeModalBtn = document.getElementById('close-modal');
+        // Configurações iniciais
+        const DAILY_MOTORCYCLE_COST = 23.00;
+        
+        // Elementos DOM
+        const dateInput = document.getElementById('date');
+        const earningsInput = document.getElementById('earnings');
+        const gasolineInput = document.getElementById('gasoline');
+        const daysSelect = document.getElementById('days');
+        const addRecordBtn = document.getElementById('add-record');
+        const calculateBtn = document.getElementById('calculate');
+        const calculationResult = document.getElementById('calculation-result');
+        const calculationDetails = document.getElementById('calculation-details');
+        const recordsBody = document.getElementById('records-body');
+        const emptyMessage = document.getElementById('empty-message');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        // Elementos de estatísticas
+        const totalBalanceEl = document.getElementById('total-balance');
+        const monthlyEarningsEl = document.getElementById('monthly-earnings');
+        const monthlyExpensesEl = document.getElementById('monthly-expenses');
+        const daysWorkedEl = document.getElementById('days-worked');
+        
+        // Definir data atual como padrão
+        const today = new Date();
+        dateInput.value = today.toISOString().split('T')[0];
+        
+        // Carregar dados do localStorage
+        let records = JSON.parse(localStorage.getItem('deliveryRecords')) || [];
+        
+        // Inicializar o sistema
+        function init() {
+            updateStatistics();
+            renderRecords();
+            setupEventListeners();
+        }
+        
+        // Configurar event listeners
+        function setupEventListeners() {
+            addRecordBtn.addEventListener('click', addRecord);
+            calculateBtn.addEventListener('click', calculateDailyNet);
             
-            // Estado atual
-            let currentDate = new Date();
-            let selectedDate = new Date();
-            let currentMonth = new Date().getMonth();
-            let currentYear = new Date().getFullYear();
-            let workTimer = null;
-            let currentAction = null;
-            
-            // Dados do localStorage
-            let workData = JSON.parse(localStorage.getItem('workData')) || {};
-            let currentSession = JSON.parse(localStorage.getItem('currentSession')) || null;
-            
-            // Inicialização
-            updateTimeDisplay();
-            checkActiveSession();
-            loadTodayData();
-            updateHistory();
-            updateCalendar();
-            
-            // Atualizar o relógio a cada segundo
-            setInterval(updateTimeDisplay, 1000);
-            
-            // Event Listeners
-            startWorkBtn.addEventListener('click', startWork);
-            endWorkBtn.addEventListener('click', endWork);
-            addDeliveryBtn.addEventListener('click', () => addItem('delivery', 7));
-            addWaitingFeeBtn.addEventListener('click', () => showInputModal('waitingFee', 'Taxa de Espera', 'Digite o valor da taxa de espera:'));
-            addTipBtn.addEventListener('click', () => showInputModal('tip', 'Gorjeta', 'Digite o valor da gorjeta:'));
-            addFreelanceBtn.addEventListener('click', () => showInputModal('freelance', 'Renda Extra', 'Digite o valor da renda extra:'));
-            prevMonthBtn.addEventListener('click', prevMonth);
-            nextMonthBtn.addEventListener('click', nextMonth);
-            modalConfirmBtn.addEventListener('click', confirmInput);
-            closeModalBtn.addEventListener('click', closeInputModal);
-            
-            // Funções
-            
-            function updateTimeDisplay() {
-                const now = new Date();
-                currentTimeEl.textContent = now.toLocaleTimeString('pt-BR');
-                
-                // Atualizar duração do trabalho se estiver trabalhando
-                if (currentSession && currentSession.active) {
-                    const sessionDuration = Math.floor((now - new Date(currentSession.startTime)) / 1000);
-                    workDurationEl.textContent = formatTime(sessionDuration);
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remover classe active de todos os botões
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Adicionar classe active ao botão clicado
+                    this.classList.add('active');
                     
-                    // Atualizar também o total do dia
-                    updateTodayWorkHours();
-                }
-            }
-            
-            function checkActiveSession() {
-                if (currentSession && currentSession.active) {
-                    // Verificar se a sessão ainda é do dia atual
-                    const sessionDate = new Date(currentSession.startTime);
-                    if (!isSameDay(sessionDate, new Date())) {
-                        // Sessão de um dia anterior - finalizar automaticamente
-                        endWork(true);
-                    } else {
-                        // Sessão ativa do dia atual
-                        workStatusEl.textContent = 'STATUS: TRABALHANDO AGORA!';
-                        workStatusEl.className = 'status-box status-working';
-                        startWorkBtn.disabled = true;
-                        endWorkBtn.disabled = false;
-                        
-                        // Iniciar timer para atualizar a duração
-                        if (!workTimer) {
-                            workTimer = setInterval(updateTimeDisplay, 1000);
-                        }
-                    }
-                } else {
-                    workStatusEl.textContent = 'STATUS: NÃO TRABALHANDO';
-                    workStatusEl.className = 'status-box status-not-working';
-                    startWorkBtn.disabled = false;
-                    endWorkBtn.disabled = true;
-                }
-            }
-            
-            function startWork() {
-                const startTime = new Date();
-                
-                // Criar sessão atual
-                currentSession = {
-                    active: true,
-                    startTime: startTime.getTime(),
-                    date: getDateString(startTime)
-                };
-                
-                // Salvar sessão no localStorage
-                localStorage.setItem('currentSession', JSON.stringify(currentSession));
-                
-                // Atualizar interface
-                workStatusEl.textContent = 'STATUS: TRABALHANDO AGORA!';
-                workStatusEl.className = 'status-box status-working';
-                startWorkBtn.disabled = true;
-                endWorkBtn.disabled = false;
-                
-                // Iniciar timer para atualizar a duração
-                if (!workTimer) {
-                    workTimer = setInterval(updateTimeDisplay, 1000);
-                }
-                
-                updateTodayWorkHours();
-                showNotification('Trabalho iniciado! Hora de ganhar dinheiro!', 'success');
-            }
-            
-            function endWork(automatic = false) {
-                if (!currentSession || !currentSession.active) return;
-                
-                const endTime = new Date();
-                const startTime = new Date(currentSession.startTime);
-                const sessionDuration = Math.floor((endTime - startTime) / 1000);
-                const dateStr = currentSession.date;
-                
-                // Garantir que workData[dateStr] existe e tem a estrutura correta
-                if (!workData[dateStr]) {
-                    workData[dateStr] = createEmptyDayData();
-                }
-                
-                // Garantir que workSessions existe
-                if (!workData[dateStr].workSessions) {
-                    workData[dateStr].workSessions = [];
-                }
-                
-                // Adicionar sessão aos dados
-                workData[dateStr].workSessions.push({
-                    startTime: startTime.getTime(),
-                    endTime: endTime.getTime(),
-                    duration: sessionDuration
+                    // Filtrar registros
+                    const filter = this.getAttribute('data-filter');
+                    renderRecords(filter);
                 });
-                
-                // Atualizar duração total do dia
-                workData[dateStr].totalWorkDuration = (workData[dateStr].totalWorkDuration || 0) + sessionDuration;
-                
-                // Calcular bônus por tempo trabalhado
-                const hoursWorked = sessionDuration / 3600;
-                if (hoursWorked >= 8) {
-                    workData[dateStr].bonus = (workData[dateStr].bonus || 0) + 14;
-                    showNotification('Bônus de +R$ 14,00 por trabalhar 8h ou mais!', 'success');
-                }
-                
-                // Salvar dados
-                saveData();
-                
-                // Limpar sessão atual
-                currentSession = null;
-                localStorage.removeItem('currentSession');
-                
-                // Atualizar interface
-                workStatusEl.textContent = 'STATUS: TRABALHO FINALIZADO';
-                workStatusEl.className = 'status-box status-not-working';
-                startWorkBtn.disabled = false;
-                endWorkBtn.disabled = true;
-                
-                // Parar timer
-                if (workTimer) {
-                    clearInterval(workTimer);
-                    workTimer = null;
-                }
-                
-                workDurationEl.textContent = '00:00:00';
-                updateTodayWorkHours();
-                updateHistory();
-                updateCalendar();
-                
-                if (!automatic) {
-                    showNotification('Trabalho finalizado! Bom descanso!', 'info');
-                }
-            }
-            
-            function addItem(type, fixedValue = 0) {
-                const dateStr = getDateString(new Date());
-                
-                // Garantir que workData[dateStr] existe
-                if (!workData[dateStr]) {
-                    workData[dateStr] = createEmptyDayData();
-                }
-                
-                let value = fixedValue;
-                
-                if (type === 'delivery') {
-                    workData[dateStr].deliveries += 1;
-                    workData[dateStr].earnings += value;
-                    
-                    // Determinar turno baseado na hora atual
-                    const now = new Date();
-                    const hour = now.getHours();
-                    
-                    if (hour >= 5 && hour < 12) {
-                        workData[dateStr].morningDeliveries += 1;
-                    } else if (hour >= 17 || hour < 5) {
-                        workData[dateStr].eveningDeliveries += 1;
-                    }
-                    
-                    // Bônus por múltiplas entregas
-                    if (workData[dateStr].deliveries % 5 === 0) {
-                        workData[dateStr].bonus = (workData[dateStr].bonus || 0) + 7;
-                        showNotification(`Bônus de +R$ 7,00 por completar ${workData[dateStr].deliveries} entregas!`, 'success');
-                    }
-                    
-                    showNotification('Entrega registrada! +R$ ' + value.toFixed(2), 'success');
-                    
-                } else {
-                    workData[dateStr].additionalEarnings += value;
-                    workData[dateStr].earnings += value;
-                    showNotification(`${getItemName(type)} registrada! +R$ ${value.toFixed(2)}`, 'info');
-                }
-                
-                saveData();
-                loadTodayData();
-                updateHistory();
-                updateCalendar();
-            }
-            
-            function showInputModal(type, title, label) {
-                currentAction = type;
-                modalTitleEl.textContent = title;
-                modalLabelEl.textContent = label;
-                modalInputEl.value = '';
-                inputModalEl.classList.add('active');
-                modalInputEl.focus();
-            }
-            
-            function confirmInput() {
-                const value = parseFloat(modalInputEl.value) || 0;
-                if (value <= 0) {
-                    showNotification('Por favor, insira um valor válido!', 'danger');
-                    return;
-                }
-                
-                closeInputModal();
-                
-                const dateStr = getDateString(new Date());
-                
-                // Garantir que workData[dateStr] existe
-                if (!workData[dateStr]) {
-                    workData[dateStr] = createEmptyDayData();
-                }
-                
-                if (currentAction === 'waitingFee') {
-                    workData[dateStr].earnings += value;
-                    workData[dateStr].additionalEarnings += value;
-                    showNotification('Taxa de espera registrada! +R$ ' + value.toFixed(2), 'info');
-                } else if (currentAction === 'tip') {
-                    workData[dateStr].earnings += value;
-                    workData[dateStr].additionalEarnings += value;
-                    showNotification('Gorjeta registrada! +R$ ' + value.toFixed(2), 'info');
-                } else if (currentAction === 'freelance') {
-                    workData[dateStr].earnings += value;
-                    workData[dateStr].additionalEarnings += value;
-                    showNotification('Renda extra registrada! +R$ ' + value.toFixed(2), 'info');
-                }
-                
-                saveData();
-                loadTodayData();
-                updateHistory();
-                updateCalendar();
-            }
-            
-            function closeInputModal() {
-                inputModalEl.classList.remove('active');
-                currentAction = null;
-            }
-            
-            function createEmptyDayData() {
-                return {
-                    deliveries: 0,
-                    earnings: 0,
-                    workSessions: [],
-                    totalWorkDuration: 0,
-                    morningDeliveries: 0,
-                    eveningDeliveries: 0,
-                    additionalEarnings: 0,
-                    bonus: 0
-                };
-            }
-            
-            function getItemName(type) {
-                const names = {
-                    delivery: 'Entrega',
-                    waitingFee: 'Taxa de Espera',
-                    tip: 'Gorjeta',
-                    freelance: 'Renda Extra'
-                };
-                return names[type] || 'Item';
-            }
-            
-            function loadTodayData() {
-                const dateStr = getDateString(new Date());
-                
-                // Garantir que workData[dateStr] existe
-                if (!workData[dateStr]) {
-                    workData[dateStr] = createEmptyDayData();
-                }
-                
-                const todayData = workData[dateStr];
-                
-                // Atualizar exibição com valores seguros
-                todayDeliveriesEl.textContent = todayData.deliveries || 0;
-                todayEarningsEl.textContent = `R$ ${(todayData.earnings || 0).toFixed(2)}`;
-                todayBonusEl.textContent = `R$ ${(todayData.bonus || 0).toFixed(2)}`;
-                
-                // Atualizar turnos com valores seguros
-                const morningCount = todayData.morningDeliveries || 0;
-                const eveningCount = todayData.eveningDeliveries || 0;
-                
-                document.querySelector('#morning-shift .shift-count').textContent = `${morningCount}/5`;
-                document.querySelector('#evening-shift .shift-count').textContent = `${eveningCount}/4`;
-                
-                // Atualizar classes de meta
-                morningShiftEl.className = `shift-box ${morningCount >= 5 ? 'completed' : 'in-progress'}`;
-                eveningShiftEl.className = `shift-box ${eveningCount >= 4 ? 'completed' : 'in-progress'}`;
-                
-                // Atualizar carga horária
-                updateTodayWorkHours();
-            }
-            
-            function updateTodayWorkHours() {
-                const dateStr = getDateString(new Date());
-                
-                // Garantir que workData[dateStr] existe
-                if (!workData[dateStr]) {
-                    workData[dateStr] = createEmptyDayData();
-                }
-                
-                const todayData = workData[dateStr];
-                let totalSeconds = 0;
-                
-                // Soma do tempo das sessões salvas
-                if (todayData.totalWorkDuration) {
-                    totalSeconds += todayData.totalWorkDuration;
-                }
-                
-                // Adiciona tempo da sessão atual se estiver ativa e for o dia selecionado
-                if (currentSession && currentSession.active && currentSession.date === dateStr) {
-                    const now = new Date();
-                    const sessionDuration = Math.floor((now - new Date(currentSession.startTime)) / 1000);
-                    totalSeconds += sessionDuration;
-                }
-                
-                totalWorkTodayEl.textContent = formatTime(totalSeconds);
-            }
-            
-            function updateCalendar() {
-                const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-                    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-                
-                currentMonthEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
-                
-                // Gerar calendário
-                const firstDay = new Date(currentYear, currentMonth, 1);
-                const lastDay = new Date(currentYear, currentMonth + 1, 0);
-                const daysInMonth = lastDay.getDate();
-                const startingDay = firstDay.getDay();
-                
-                let calendarHTML = '<table class="calendar"><tr><th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th></tr><tr>';
-                
-                // Dias vazios no início
-                for (let i = 0; i < startingDay; i++) {
-                    calendarHTML += '<td></td>';
-                }
-                
-                // Dias do mês
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    const cellDate = new Date(currentYear, currentMonth, day);
-                    const isToday = isSameDay(cellDate, new Date());
-                    const hasData = workData[dateStr] !== undefined && 
-                                   (workData[dateStr].deliveries > 0 || workData[dateStr].totalWorkDuration > 0);
-                    
-                    let cellClass = '';
-                    if (isToday) cellClass += ' today';
-                    if (hasData) cellClass += ' worked';
-                    
-                    calendarHTML += `<td class="${cellClass}" data-date="${dateStr}">${day}</td>`;
-                    
-                    // Quebra de linha no sábado
-                    if ((day + startingDay) % 7 === 0) {
-                        calendarHTML += '</tr><tr>';
-                    }
-                }
-                
-                calendarHTML += '</tr></table>';
-                calendarEl.innerHTML = calendarHTML;
-                
-                // Adicionar event listeners para os dias
-                document.querySelectorAll('.calendar td[data-date]').forEach(cell => {
-                    cell.addEventListener('click', function() {
-                        const dateStr = this.getAttribute('data-date');
-                        showDayDetails(dateStr);
-                    });
-                });
-            }
-            
-            function showDayDetails(dateStr) {
-                const date = new Date(dateStr);
-                const formattedDate = date.toLocaleDateString('pt-BR', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
-                
-                detailDateEl.textContent = formattedDate;
-                
-                // Garantir que workData[dateStr] existe
-                if (!workData[dateStr]) {
-                    workData[dateStr] = createEmptyDayData();
-                }
-                
-                const dayData = workData[dateStr];
-                
-                detailDeliveriesEl.textContent = dayData.deliveries || 0;
-                detailEarningsEl.textContent = `R$ ${(dayData.earnings || 0).toFixed(2)}`;
-                detailHoursEl.textContent = formatTime(dayData.totalWorkDuration || 0);
-                detailBonusEl.textContent = `R$ ${(dayData.bonus || 0).toFixed(2)}`;
-                
-                dayDetailsEl.classList.add('active');
-            }
-            
-            function updateHistory() {
-                // Ordenar datas (mais recente primeiro)
-                const dates = Object.keys(workData).sort((a, b) => new Date(b) - new Date(a));
-                
-                let historyHTML = '';
-                
-                dates.forEach(dateStr => {
-                    const data = workData[dateStr];
-                    
-                    // Verificar se há dados relevantes para mostrar
-                    const hasRelevantData = (data.deliveries && data.deliveries > 0) || 
-                                          (data.earnings && data.earnings > 0) || 
-                                          (data.totalWorkDuration && data.totalWorkDuration > 0);
-                    
-                    if (hasRelevantData) {
-                        const date = new Date(dateStr);
-                        const formattedDate = date.toLocaleDateString('pt-BR');
-                        
-                        // Determinar status baseado nas metas
-                        let status = '⚠️ Meta não atingida';
-                        if (data.deliveries >= 9) {
-                            status = '🎉 Meta superada!';
-                        } else if (data.deliveries >= 5) {
-                            status = '✅ Meta parcial';
-                        }
-                        
-                        historyHTML += `
-                            <tr>
-                                <td>${formattedDate}</td>
-                                <td>${data.deliveries || 0}</td>
-                                <td>R$ ${(data.earnings || 0).toFixed(2)}</td>
-                                <td>${formatTime(data.totalWorkDuration || 0)}</td>
-                                <td>R$ ${(data.bonus || 0).toFixed(2)}</td>
-                                <td>${status}</td>
-                            </tr>
-                        `;
-                    }
-                });
-                
-                historyBodyEl.innerHTML = historyHTML || '<tr><td colspan="6">Nenhum registro encontrado. Comece a trabalhar para ver seu histórico aqui!</td></tr>';
-            }
-            
-            function prevMonth() {
-                currentMonth--;
-                if (currentMonth < 0) {
-                    currentMonth = 11;
-                    currentYear--;
-                }
-                updateCalendar();
-            }
-            
-            function nextMonth() {
-                currentMonth++;
-                if (currentMonth > 11) {
-                    currentMonth = 0;
-                    currentYear++;
-                }
-                updateCalendar();
-            }
-            
-            function showNotification(message, type = 'info') {
-                notificationTextEl.textContent = message;
-                
-                // Definir cor baseada no tipo
-                if (type === 'success') {
-                    notificationEl.style.backgroundColor = 'var(--success)';
-                } else if (type === 'warning') {
-                    notificationEl.style.backgroundColor = 'var(--warning)';
-                } else if (type === 'danger') {
-                    notificationEl.style.backgroundColor = 'var(--danger)';
-                } else {
-                    notificationEl.style.backgroundColor = 'var(--primary)';
-                }
-                
-                notificationEl.classList.add('show');
-                
-                setTimeout(() => {
-                    notificationEl.classList.remove('show');
-                }, 3000);
-            }
-            
-            function saveData() {
-                localStorage.setItem('workData', JSON.stringify(workData));
-            }
-            
-            // Funções auxiliares
-            function getDateString(date) {
-                return date.toISOString().split('T')[0];
-            }
-            
-            function isSameDay(date1, date2) {
-                return date1.getFullYear() === date2.getFullYear() &&
-                       date1.getMonth() === date2.getMonth() &&
-                       date1.getDate() === date2.getDate();
-            }
-            
-            function formatTime(seconds) {
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                const secs = seconds % 60;
-                
-                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            }
-            
-            // Salvar dados antes de fechar a página
-            window.addEventListener('beforeunload', function() {
-                saveData();
             });
-        });
+        }
+        
+        // Adicionar um novo registro
+        function addRecord() {
+            const date = dateInput.value;
+            const earnings = parseFloat(earningsInput.value) || 0;
+            const gasoline = parseFloat(gasolineInput.value) || 0;
+            const days = parseInt(daysSelect.value) || 1;
+            
+            // Validação básica
+            if (!date) {
+                alert('Por favor, informe a data.');
+                return;
+            }
+            
+            if (earnings <= 0) {
+                alert('Por favor, informe o valor das entregas.');
+                return;
+            }
+            
+            // Calcular custo da diária da moto
+            const motorcycleCost = days * DAILY_MOTORCYCLE_COST;
+            
+            // Calcular líquido do dia
+            const totalExpenses = gasoline + motorcycleCost;
+            const netValue = earnings - totalExpenses;
+            
+            // Criar objeto de registro
+            const record = {
+                id: Date.now(),
+                date: date,
+                earnings: earnings,
+                gasoline: gasoline,
+                days: days,
+                motorcycleCost: motorcycleCost,
+                totalExpenses: totalExpenses,
+                netValue: netValue
+            };
+            
+            // Adicionar ao array de registros
+            records.push(record);
+            
+            // Salvar no localStorage
+            localStorage.setItem('deliveryRecords', JSON.stringify(records));
+            
+            // Atualizar a interface
+            updateStatistics();
+            renderRecords();
+            
+            // Limpar campos (exceto gasolina que mantém o valor padrão)
+            earningsInput.value = '';
+            
+            // Mostrar confirmação
+            alert('Registro adicionado com sucesso!');
+        }
+        
+        // Calcular líquido do dia (apenas para visualização)
+        function calculateDailyNet() {
+            const earnings = parseFloat(earningsInput.value) || 0;
+            const gasoline = parseFloat(gasolineInput.value) || 0;
+            const days = parseInt(daysSelect.value) || 1;
+            
+            if (earnings <= 0) {
+                alert('Por favor, informe o valor das entregas para calcular.');
+                return;
+            }
+            
+            // Calcular custo da diária da moto
+            const motorcycleCost = days * DAILY_MOTORCYCLE_COST;
+            
+            // Calcular líquido do dia
+            const totalExpenses = gasoline + motorcycleCost;
+            const netValue = earnings - totalExpenses;
+            
+            // Formatar valores para exibição
+            const formatCurrency = (value) => {
+                return `R$ ${value.toFixed(2).replace('.', ',')}`;
+            };
+            
+            // Montar detalhes do cálculo
+            let details = `
+                <p><strong>Entregas:</strong> ${formatCurrency(earnings)}</p>
+                <p><strong>Gasolina:</strong> ${formatCurrency(gasoline)}</p>
+                <p><strong>Diária da Moto (${days} dias):</strong> ${formatCurrency(motorcycleCost)}</p>
+                <p><strong>Total de Despesas:</strong> ${formatCurrency(totalExpenses)}</p>
+                <p style="font-size: 1.2rem; font-weight: bold; margin-top: 10px; color: ${netValue >= 0 ? '#27ae60' : '#e74c3c'}">
+                    <strong>Valor Líquido:</strong> ${formatCurrency(netValue)}
+                </p>
+            `;
+            
+            if (days > 1) {
+                details += `<p style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                    <i class="fas fa-info-circle"></i> <strong>Média por dia:</strong> ${formatCurrency(netValue / days)}
+                </p>`;
+            }
+            
+            calculationDetails.innerHTML = details;
+            calculationResult.style.display = 'block';
+        }
+        
+        // Renderizar registros na tabela
+        function renderRecords(filter = 'all') {
+            // Limpar tabela
+            recordsBody.innerHTML = '';
+            
+            // Filtrar registros
+            let filteredRecords = [...records];
+            
+            if (filter !== 'all') {
+                const now = new Date();
+                
+                filteredRecords = records.filter(record => {
+                    const recordDate = new Date(record.date);
+                    
+                    switch(filter) {
+                        case 'today':
+                            return recordDate.toDateString() === now.toDateString();
+                        case 'week':
+                            // Primeiro dia da semana (domingo)
+                            const firstDayOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+                            return recordDate >= firstDayOfWeek;
+                        case 'month':
+                            return recordDate.getMonth() === now.getMonth() && 
+                                   recordDate.getFullYear() === now.getFullYear();
+                        case 'year':
+                            return recordDate.getFullYear() === now.getFullYear();
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            // Ordenar por data (mais recente primeiro)
+            filteredRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Verificar se há registros
+            if (filteredRecords.length === 0) {
+                emptyMessage.style.display = 'block';
+                return;
+            }
+            
+            emptyMessage.style.display = 'none';
+            
+            // Adicionar registros à tabela
+            filteredRecords.forEach(record => {
+                const row = document.createElement('tr');
+                
+                // Formatar data para exibição
+                const dateObj = new Date(record.date);
+                const formattedDate = dateObj.toLocaleDateString('pt-BR');
+                
+                // Formatar valores monetários
+                const formatCurrency = (value) => {
+                    return `R$ ${value.toFixed(2).replace('.', ',')}`;
+                };
+                
+                // Determinar classe para valor líquido
+                const netClass = record.netValue >= 0 ? 'positive' : 'negative';
+                
+                row.innerHTML = `
+                    <td>${formattedDate}</td>
+                    <td>${formatCurrency(record.earnings)}</td>
+                    <td>${formatCurrency(record.gasoline)}</td>
+                    <td>${formatCurrency(record.motorcycleCost)} (${record.days} dias)</td>
+                    <td class="${netClass}">${formatCurrency(record.netValue)}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteRecord(${record.id})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                `;
+                
+                recordsBody.appendChild(row);
+            });
+        }
+        
+        // Excluir registro
+        function deleteRecord(id) {
+            if (!confirm('Tem certeza que deseja excluir este registro?')) {
+                return;
+            }
+            
+            // Filtrar registros, removendo o com o ID especificado
+            records = records.filter(record => record.id !== id);
+            
+            // Salvar no localStorage
+            localStorage.setItem('deliveryRecords', JSON.stringify(records));
+            
+            // Atualizar a interface
+            updateStatistics();
+            renderRecords();
+        }
+        
+        // Atualizar estatísticas
+        function updateStatistics() {
+            if (records.length === 0) {
+                totalBalanceEl.textContent = 'R$ 0,00';
+                monthlyEarningsEl.textContent = 'R$ 0,00';
+                monthlyExpensesEl.textContent = 'R$ 0,00';
+                daysWorkedEl.textContent = '0';
+                return;
+            }
+            
+            // Calcular estatísticas gerais
+            let totalBalance = 0;
+            let monthlyEarnings = 0;
+            let monthlyExpenses = 0;
+            let daysWorked = 0;
+            
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            records.forEach(record => {
+                const recordDate = new Date(record.date);
+                
+                // Saldo total
+                totalBalance += record.netValue;
+                
+                // Estatísticas do mês atual
+                if (recordDate.getMonth() === currentMonth && 
+                    recordDate.getFullYear() === currentYear) {
+                    monthlyEarnings += record.earnings;
+                    monthlyExpenses += record.totalExpenses;
+                }
+                
+                // Contar dias trabalhados (últimos 30 dias)
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                if (recordDate >= thirtyDaysAgo) {
+                    daysWorked += record.days;
+                }
+            });
+            
+            // Formatar valores para exibição
+            const formatCurrency = (value) => {
+                const prefix = value < 0 ? '-R$ ' : 'R$ ';
+                return prefix + Math.abs(value).toFixed(2).replace('.', ',');
+            };
+            
+            // Atualizar elementos
+            totalBalanceEl.textContent = formatCurrency(totalBalance);
+            totalBalanceEl.className = `stat-value ${totalBalance >= 0 ? 'positive' : 'negative'}`;
+            
+            monthlyEarningsEl.textContent = formatCurrency(monthlyEarnings);
+            monthlyExpensesEl.textContent = formatCurrency(monthlyExpenses);
+            daysWorkedEl.textContent = daysWorked;
+        }
+        
+        // Inicializar o sistema quando a página carregar
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
