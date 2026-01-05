@@ -1,711 +1,197 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Financeiro - Entregador</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 10px;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
-        
-        header {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
-        
-        .subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-        
-        .app-content {
-            padding: 20px;
-        }
-        
-        .stats-summary {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .stat-card {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            border-left: 4px solid #2a5298;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-        }
-        
-        .stat-card h3 {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 8px;
-        }
-        
-        .stat-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #1e3c72;
-        }
-        
-        .positive {
-            color: #2ecc71;
-        }
-        
-        .negative {
-            color: #e74c3c;
-        }
-        
-        .input-section {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        .input-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .input-field {
-            flex: 1;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #444;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border 0.3s;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #2a5298;
-        }
-        
-        .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        button {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background-color: #2a5298;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: #1e3c72;
-        }
-        
-        .btn-secondary {
-            background-color: #ecf0f1;
-            color: #333;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #d5dbdb;
-        }
-        
-        .btn-success {
-            background-color: #2ecc71;
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background-color: #27ae60;
-        }
-        
-        .records-section {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-        }
-        
-        .section-title {
-            font-size: 1.3rem;
-            color: #1e3c72;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .filter-options {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .filter-btn {
-            padding: 8px 15px;
-            background-color: #e9ecef;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .filter-btn.active {
-            background-color: #2a5298;
-            color: white;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        
-        th {
-            background-color: #e9ecef;
-            padding: 12px 10px;
-            text-align: left;
-            font-weight: 600;
-            color: #444;
-            border-bottom: 2px solid #ddd;
-        }
-        
-        td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .delete-btn {
-            color: #e74c3c;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 5px;
-        }
-        
-        .empty-message {
-            text-align: center;
-            padding: 30px;
-            color: #777;
-            font-style: italic;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 15px;
-            color: #777;
-            font-size: 0.9rem;
-            border-top: 1px solid #eee;
-        }
-        
-        .diaria-info {
-            background-color: #e8f4fd;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            border-left: 4px solid #3498db;
-        }
-        
-        @media (max-width: 600px) {
-            .stats-summary {
-                grid-template-columns: 1fr;
-            }
-            
-            .input-row {
-                flex-direction: column;
-            }
-            
-            th, td {
-                padding: 8px 5px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Calendário Financeiro - Janeiro 2026</title>
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --bg: #f8fafc;
+      --card: #ffffff;
+    }
+
+    * { box-sizing: border-box; font-family: Inter, system-ui, sans-serif; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      padding: 20px;
+      color: var(--primary);
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.05);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 14px;
+      opacity: .7;
+    }
+
+    .card strong {
+      font-size: 22px;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+    }
+
+    .day {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.04);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .day header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+
+    .day input {
+      width: 100%;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .meta {
+      font-size: 12px;
+      opacity: .7;
+    }
+
+    .paid {
+      background: #dcfce7;
+      border: 1px solid #22c55e;
+    }
+
+    .bill {
+      font-size: 12px;
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      opacity: .6;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-motorcycle"></i> Sistema Financeiro - Entregador</h1>
-            <p class="subtitle">Controle de ganhos, despesas de moto e gasolina</p>
-        </header>
-        
-        <div class="app-content">
-            <div class="stats-summary">
-                <div class="stat-card">
-                    <h3>Saldo Total</h3>
-                    <div class="stat-value" id="total-balance">R$ 0,00</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Ganhos do Mês</h3>
-                    <div class="stat-value positive" id="monthly-earnings">R$ 0,00</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Despesas do Mês</h3>
-                    <div class="stat-value negative" id="monthly-expenses">R$ 0,00</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Dias Trabalhados</h3>
-                    <div class="stat-value" id="days-worked">0</div>
-                </div>
-            </div>
-            
-            <div class="input-section">
-                <h2 class="section-title">Registrar Dia de Trabalho</h2>
-                
-                <div class="input-row">
-                    <div class="input-field">
-                        <label for="date"><i class="far fa-calendar-alt"></i> Data</label>
-                        <input type="date" id="date" value="">
-                    </div>
-                    <div class="input-field">
-                        <label for="earnings"><i class="fas fa-money-bill-wave"></i> Valor das Entregas (R$)</label>
-                        <input type="number" id="earnings" step="0.01" placeholder="Ex: 178.77">
-                    </div>
-                </div>
-                
-                <div class="input-row">
-                    <div class="input-field">
-                        <label for="gasoline"><i class="fas fa-gas-pump"></i> Gasto com Gasolina (R$)</label>
-                        <input type="number" id="gasoline" step="0.01" placeholder="Ex: 30.00" value="30">
-                    </div>
-                    <div class="input-field">
-                        <label for="days"><i class="fas fa-calendar-day"></i> Dias de Uso da Moto</label>
-                        <select id="days">
-                            <option value="1">1 dia (R$ 23,00)</option>
-                            <option value="2" selected>2 dias (R$ 46,00)</option>
-                            <option value="3">3 dias (R$ 69,00)</option>
-                            <option value="4">4 dias (R$ 92,00)</option>
-                            <option value="5">5 dias (R$ 115,00)</option>
-                            <option value="6">6 dias (R$ 138,00)</option>
-                            <option value="7">7 dias (R$ 161,00)</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="diaria-info">
-                    <i class="fas fa-info-circle"></i> A diária da moto é fixada em <strong>R$ 23,00 por dia</strong>. O valor será automaticamente calculado conforme os dias selecionados.
-                </div>
-                
-                <div class="buttons">
-                    <button class="btn-primary" id="add-record">
-                        <i class="fas fa-plus-circle"></i> Adicionar Registro
-                    </button>
-                    <button class="btn-success" id="calculate">
-                        <i class="fas fa-calculator"></i> Calcular Líquido
-                    </button>
-                </div>
-                
-                <div style="margin-top: 20px; padding: 15px; background-color: #e8f6f3; border-radius: 8px; display: none;" id="calculation-result">
-                    <h3 style="color: #27ae60; margin-bottom: 10px;"><i class="fas fa-calculator"></i> Cálculo do Dia</h3>
-                    <div id="calculation-details"></div>
-                </div>
-            </div>
-            
-            <div class="records-section">
-                <h2 class="section-title">Registros de Trabalho</h2>
-                
-                <div class="filter-options">
-                    <button class="filter-btn active" data-filter="all">Todos</button>
-                    <button class="filter-btn" data-filter="today">Hoje</button>
-                    <button class="filter-btn" data-filter="week">Esta Semana</button>
-                    <button class="filter-btn" data-filter="month">Este Mês</button>
-                    <button class="filter-btn" data-filter="year">Este Ano</button>
-                </div>
-                
-                <div style="overflow-x: auto;">
-                    <table id="records-table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Entregas</th>
-                                <th>Gasolina</th>
-                                <th>Diária Moto</th>
-                                <th>Líquido</th>
-                                <th>Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody id="records-body">
-                            <!-- Registros serão inseridos aqui via JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="empty-message" id="empty-message">
-                    <i class="far fa-folder-open" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;"></i>
-                    <p>Nenhum registro encontrado. Adicione seu primeiro registro acima.</p>
-                </div>
-            </div>
-        </div>
-        
-        <footer>
-            <p>Sistema Financeiro para Entregadores &copy; 2023 | Diária da Moto: R$ 23,00/dia</p>
-        </footer>
-    </div>
 
-    <script>
-        // Configurações iniciais
-        const DAILY_MOTORCYCLE_COST = 23.00;
-        
-        // Elementos DOM
-        const dateInput = document.getElementById('date');
-        const earningsInput = document.getElementById('earnings');
-        const gasolineInput = document.getElementById('gasoline');
-        const daysSelect = document.getElementById('days');
-        const addRecordBtn = document.getElementById('add-record');
-        const calculateBtn = document.getElementById('calculate');
-        const calculationResult = document.getElementById('calculation-result');
-        const calculationDetails = document.getElementById('calculation-details');
-        const recordsBody = document.getElementById('records-body');
-        const emptyMessage = document.getElementById('empty-message');
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        
-        // Elementos de estatísticas
-        const totalBalanceEl = document.getElementById('total-balance');
-        const monthlyEarningsEl = document.getElementById('monthly-earnings');
-        const monthlyExpensesEl = document.getElementById('monthly-expenses');
-        const daysWorkedEl = document.getElementById('days-worked');
-        
-        // Definir data atual como padrão
-        const today = new Date();
-        dateInput.value = today.toISOString().split('T')[0];
-        
-        // Carregar dados do localStorage
-        let records = JSON.parse(localStorage.getItem('deliveryRecords')) || [];
-        
-        // Inicializar o sistema
-        function init() {
-            updateStatistics();
-            renderRecords();
-            setupEventListeners();
-        }
-        
-        // Configurar event listeners
-        function setupEventListeners() {
-            addRecordBtn.addEventListener('click', addRecord);
-            calculateBtn.addEventListener('click', calculateDailyNet);
-            
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remover classe active de todos os botões
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    // Adicionar classe active ao botão clicado
-                    this.classList.add('active');
-                    
-                    // Filtrar registros
-                    const filter = this.getAttribute('data-filter');
-                    renderRecords(filter);
-                });
-            });
-        }
-        
-        // Adicionar um novo registro
-        function addRecord() {
-            const date = dateInput.value;
-            const earnings = parseFloat(earningsInput.value) || 0;
-            const gasoline = parseFloat(gasolineInput.value) || 0;
-            const days = parseInt(daysSelect.value) || 1;
-            
-            // Validação básica
-            if (!date) {
-                alert('Por favor, informe a data.');
-                return;
-            }
-            
-            if (earnings <= 0) {
-                alert('Por favor, informe o valor das entregas.');
-                return;
-            }
-            
-            // Calcular custo da diária da moto
-            const motorcycleCost = days * DAILY_MOTORCYCLE_COST;
-            
-            // Calcular líquido do dia
-            const totalExpenses = gasoline + motorcycleCost;
-            const netValue = earnings - totalExpenses;
-            
-            // Criar objeto de registro
-            const record = {
-                id: Date.now(),
-                date: date,
-                earnings: earnings,
-                gasoline: gasoline,
-                days: days,
-                motorcycleCost: motorcycleCost,
-                totalExpenses: totalExpenses,
-                netValue: netValue
-            };
-            
-            // Adicionar ao array de registros
-            records.push(record);
-            
-            // Salvar no localStorage
-            localStorage.setItem('deliveryRecords', JSON.stringify(records));
-            
-            // Atualizar a interface
-            updateStatistics();
-            renderRecords();
-            
-            // Limpar campos (exceto gasolina que mantém o valor padrão)
-            earningsInput.value = '';
-            
-            // Mostrar confirmação
-            alert('Registro adicionado com sucesso!');
-        }
-        
-        // Calcular líquido do dia (apenas para visualização)
-        function calculateDailyNet() {
-            const earnings = parseFloat(earningsInput.value) || 0;
-            const gasoline = parseFloat(gasolineInput.value) || 0;
-            const days = parseInt(daysSelect.value) || 1;
-            
-            if (earnings <= 0) {
-                alert('Por favor, informe o valor das entregas para calcular.');
-                return;
-            }
-            
-            // Calcular custo da diária da moto
-            const motorcycleCost = days * DAILY_MOTORCYCLE_COST;
-            
-            // Calcular líquido do dia
-            const totalExpenses = gasoline + motorcycleCost;
-            const netValue = earnings - totalExpenses;
-            
-            // Formatar valores para exibição
-            const formatCurrency = (value) => {
-                return `R$ ${value.toFixed(2).replace('.', ',')}`;
-            };
-            
-            // Montar detalhes do cálculo
-            let details = `
-                <p><strong>Entregas:</strong> ${formatCurrency(earnings)}</p>
-                <p><strong>Gasolina:</strong> ${formatCurrency(gasoline)}</p>
-                <p><strong>Diária da Moto (${days} dias):</strong> ${formatCurrency(motorcycleCost)}</p>
-                <p><strong>Total de Despesas:</strong> ${formatCurrency(totalExpenses)}</p>
-                <p style="font-size: 1.2rem; font-weight: bold; margin-top: 10px; color: ${netValue >= 0 ? '#27ae60' : '#e74c3c'}">
-                    <strong>Valor Líquido:</strong> ${formatCurrency(netValue)}
-                </p>
-            `;
-            
-            if (days > 1) {
-                details += `<p style="margin-top: 10px; font-size: 0.9rem; color: #666;">
-                    <i class="fas fa-info-circle"></i> <strong>Média por dia:</strong> ${formatCurrency(netValue / days)}
-                </p>`;
-            }
-            
-            calculationDetails.innerHTML = details;
-            calculationResult.style.display = 'block';
-        }
-        
-        // Renderizar registros na tabela
-        function renderRecords(filter = 'all') {
-            // Limpar tabela
-            recordsBody.innerHTML = '';
-            
-            // Filtrar registros
-            let filteredRecords = [...records];
-            
-            if (filter !== 'all') {
-                const now = new Date();
-                
-                filteredRecords = records.filter(record => {
-                    const recordDate = new Date(record.date);
-                    
-                    switch(filter) {
-                        case 'today':
-                            return recordDate.toDateString() === now.toDateString();
-                        case 'week':
-                            // Primeiro dia da semana (domingo)
-                            const firstDayOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
-                            return recordDate >= firstDayOfWeek;
-                        case 'month':
-                            return recordDate.getMonth() === now.getMonth() && 
-                                   recordDate.getFullYear() === now.getFullYear();
-                        case 'year':
-                            return recordDate.getFullYear() === now.getFullYear();
-                        default:
-                            return true;
-                    }
-                });
-            }
-            
-            // Ordenar por data (mais recente primeiro)
-            filteredRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            // Verificar se há registros
-            if (filteredRecords.length === 0) {
-                emptyMessage.style.display = 'block';
-                return;
-            }
-            
-            emptyMessage.style.display = 'none';
-            
-            // Adicionar registros à tabela
-            filteredRecords.forEach(record => {
-                const row = document.createElement('tr');
-                
-                // Formatar data para exibição
-                const dateObj = new Date(record.date);
-                const formattedDate = dateObj.toLocaleDateString('pt-BR');
-                
-                // Formatar valores monetários
-                const formatCurrency = (value) => {
-                    return `R$ ${value.toFixed(2).replace('.', ',')}`;
-                };
-                
-                // Determinar classe para valor líquido
-                const netClass = record.netValue >= 0 ? 'positive' : 'negative';
-                
-                row.innerHTML = `
-                    <td>${formattedDate}</td>
-                    <td>${formatCurrency(record.earnings)}</td>
-                    <td>${formatCurrency(record.gasoline)}</td>
-                    <td>${formatCurrency(record.motorcycleCost)} (${record.days} dias)</td>
-                    <td class="${netClass}">${formatCurrency(record.netValue)}</td>
-                    <td>
-                        <button class="delete-btn" onclick="deleteRecord(${record.id})">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                `;
-                
-                recordsBody.appendChild(row);
-            });
-        }
-        
-        // Excluir registro
-        function deleteRecord(id) {
-            if (!confirm('Tem certeza que deseja excluir este registro?')) {
-                return;
-            }
-            
-            // Filtrar registros, removendo o com o ID especificado
-            records = records.filter(record => record.id !== id);
-            
-            // Salvar no localStorage
-            localStorage.setItem('deliveryRecords', JSON.stringify(records));
-            
-            // Atualizar a interface
-            updateStatistics();
-            renderRecords();
-        }
-        
-        // Atualizar estatísticas
-        function updateStatistics() {
-            if (records.length === 0) {
-                totalBalanceEl.textContent = 'R$ 0,00';
-                monthlyEarningsEl.textContent = 'R$ 0,00';
-                monthlyExpensesEl.textContent = 'R$ 0,00';
-                daysWorkedEl.textContent = '0';
-                return;
-            }
-            
-            // Calcular estatísticas gerais
-            let totalBalance = 0;
-            let monthlyEarnings = 0;
-            let monthlyExpenses = 0;
-            let daysWorked = 0;
-            
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
-            
-            records.forEach(record => {
-                const recordDate = new Date(record.date);
-                
-                // Saldo total
-                totalBalance += record.netValue;
-                
-                // Estatísticas do mês atual
-                if (recordDate.getMonth() === currentMonth && 
-                    recordDate.getFullYear() === currentYear) {
-                    monthlyEarnings += record.earnings;
-                    monthlyExpenses += record.totalExpenses;
-                }
-                
-                // Contar dias trabalhados (últimos 30 dias)
-                const thirtyDaysAgo = new Date();
-                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-                
-                if (recordDate >= thirtyDaysAgo) {
-                    daysWorked += record.days;
-                }
-            });
-            
-            // Formatar valores para exibição
-            const formatCurrency = (value) => {
-                const prefix = value < 0 ? '-R$ ' : 'R$ ';
-                return prefix + Math.abs(value).toFixed(2).replace('.', ',');
-            };
-            
-            // Atualizar elementos
-            totalBalanceEl.textContent = formatCurrency(totalBalance);
-            totalBalanceEl.className = `stat-value ${totalBalance >= 0 ? 'positive' : 'negative'}`;
-            
-            monthlyEarningsEl.textContent = formatCurrency(monthlyEarnings);
-            monthlyExpensesEl.textContent = formatCurrency(monthlyExpenses);
-            daysWorkedEl.textContent = daysWorked;
-        }
-        
-        // Inicializar o sistema quando a página carregar
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+<h1>📆 Janeiro 2026 — Controle Financeiro</h1>
+<p>Meta diária: <strong>R$ 150</strong></p>
+
+<div class="summary">
+  <div class="card">
+    <h3>Caixa Inicial</h3>
+    <strong>R$ <span id="initial">521.34</span></strong>
+  </div>
+  <div class="card">
+    <h3>Total Faturado</h3>
+    <strong>R$ <span id="total">0.00</span></strong>
+  </div>
+  <div class="card">
+    <h3>Caixa Atual</h3>
+    <strong>R$ <span id="cash">521.34</span></strong>
+  </div>
+</div>
+
+<div class="calendar" id="calendar"></div>
+
+<footer>
+  Controle financeiro pessoal • Salvo automaticamente no navegador
+</footer>
+
+<script>
+  const META = 150;
+  const INITIAL_CASH = 521.34;
+  const DAYS = 31;
+
+  const bills = {
+    15: "Moto (527) + Cartão (500)",
+    20: "Conta 850"
+  };
+
+  const calendar = document.getElementById("calendar");
+
+  function loadData() {
+    return JSON.parse(localStorage.getItem("janeiro2026")) || {};
+  }
+
+  function saveData(data) {
+    localStorage.setItem("janeiro2026", JSON.stringify(data));
+  }
+
+  function updateSummary(data) {
+    let total = Object.values(data).reduce((a,b) => a + b, 0);
+    document.getElementById("total").innerText = total.toFixed(2);
+    document.getElementById("cash").innerText = (INITIAL_CASH + total).toFixed(2);
+  }
+
+  function render() {
+    const data = loadData();
+    calendar.innerHTML = "";
+
+    for (let day = 1; day <= DAYS; day++) {
+      const value = data[day] || "";
+
+      const div = document.createElement("div");
+      div.className = "day" + (value >= META ? " paid" : "");
+
+      div.innerHTML = `
+        <header>
+          <span>Dia ${day}</span>
+          <span>${value ? "R$ " + value : ""}</span>
+        </header>
+        <div class="meta">Meta: R$ ${META}</div>
+        ${bills[day] ? `<div class="bill">⚠ ${bills[day]}</div>` : ""}
+        <input type="number" placeholder="Quanto fez hoje?"
+               value="${value}"
+               data-day="${day}" />
+      `;
+
+      div.querySelector("input").addEventListener("input", e => {
+        data[day] = Number(e.target.value || 0);
+        saveData(data);
+        updateSummary(data);
+        render();
+      });
+
+      calendar.appendChild(div);
+    }
+
+    updateSummary(data);
+  }
+
+  render();
+</script>
+
 </body>
 </html>
